@@ -40,7 +40,7 @@
             <span class="input-label">{{ 'Last feed' | translate }}</span> {{ last.endTime | date : 'M/d/yy h:mm a'}}
         </label>
         <label class="item item-input item-stacked-label">
-            <span class="input-label">{{ 'Duration' | translate }}</span> {{ last.timeInterval/60 }} {{ 'minutes' | translate}}
+            <span class="input-label">{{ 'Duration' | translate }}</span> {{ last.timeInterval/60 | number: 2 }} {{ 'minutes' | translate}}
         </label>
     </div>
   </ion-content>

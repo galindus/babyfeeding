@@ -7,5 +7,16 @@ var translations_es = {
     lang_es: 'Español',
     lang_fr: 'Frances',
     lang_it: 'Italiano',
-    track: 'Registrar'
+    track: 'Registrar',
+    'Last feed': 'Ultima toma',
+    'Duration': 'Duración',
+    minutes: 'minutos',
+    Start: 'Inicio',
+    Stop: 'Detener',
+    Pause: 'Pausa',
+    left: 'Izquierda',
+    rigth: 'Derecha',
+    bottle: 'Biberon',
+    'Main menu': 'Menu',
+    history: 'Historial'
 };
