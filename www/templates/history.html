@@ -9,16 +9,16 @@
             </div>
             <div class="item item-text-wrap">
                 <label class="item item-input item-stacked-label" ng-repeat="track in day">
-                    <span class="input-label">{{ track.endTime | date: 'hh:mm' }}</span> {{ track.timeInterval/60 | number:2 }} {{ 'minutes' | translate }}                                        
+                    <span class="input-label">{{ track.endTime | date: 'hh:mm' }}</span> {{ duration(track.timeInterval, 'seconds') }}                                        
                 </label>
             </div>
             <div class="item item-divider">
-                {{ 'Time feeding: ' | translate }} {{ getTotalFeed(day)/60 }} {{'minutes' | translate}}
+                {{ 'Time feeding: ' | translate }} {{ getTotalFeed(day) }}
             </div>
         </div>
         <ion-infinite-scroll
-        ng-if="moreDataCanBeLoaded"
-        on-infinite="getItems(10)"       
+        ng-if="moreData()"
+        on-infinite="getItems(1)"       
         distance="1%"></ion-infinite-scroll>
   </ion-content>
 </ion-view>

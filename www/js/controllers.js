@@ -1,6 +1,11 @@
 angular.module('starter.controllers', [])
 
 .controller('AppCtrl', function($scope) {
+    moment.lang('es', {});
+    $scope.duration = function(dur, type){
+        return moment.duration(dur, type).humanize();
+    }
+
 })
 
 .controller('TrackCtrl', function($scope, trackRepository){    
@@ -93,14 +98,14 @@ angular.module('starter.controllers', [])
 })
 
 .controller('HistoryCtrl', function($scope, trackRepository){
-    $scope.limit = 10;
+    $scope.limit = 0;
     $scope.tracks = [];    
     $scope.moreDataCanBeLoaded = true;    
     $scope.getItems = function(increase){
         $scope.limit += increase;                
         $scope.days = [];        
         $scope.tracks = [];
-        trackRepository.getTracks($scope.limit, $scope.tracks, function(){            
+        trackRepository.getTracksByDay($scope.limit, $scope.tracks, function(){            
             var lent = $scope.tracks.length, lend = undefined, i;            
             for(i=0;i<lent;i++){
                 if(lend == undefined){
@@ -114,7 +119,7 @@ angular.module('starter.controllers', [])
                 tdates = tdate.getDate()+"-"+tdate.getMonth()+"-"+tdate.getFullYear();
                 ddate = new Date($scope.days[lend][0].endTime);
                 ddates = ddate.getDate()+"-"+ddate.getMonth()+"-"+ddate.getFullYear();
-                
+
                 if(tdates.localeCompare(ddates) === 0){
                     $scope.days[lend].push($scope.tracks[i]);
                     continue;
@@ -128,7 +133,7 @@ angular.module('starter.controllers', [])
                 $scope.$broadcast('scroll.infiniteScrollComplete');
             });
 
-            $scope.$apply();
+            $scope.$apply();            
         });
     }    
 
@@ -138,8 +143,15 @@ angular.module('starter.controllers', [])
         for(i=0;i<len;i++)
             total+=arr[i].timeInterval;
 
-        return total;
+        return moment.duration(total, 'seconds').humanize();
     }
 
-    $scope.getItems(10);
+    $scope.moreData = function(){
+        console.log($scope.moreDataCanBeLoaded);
+        return $scope.moreDataCanBeLoaded;
+    }
+    
+    // Get 2 days.
+    $scope.getItems(2);
+
 })

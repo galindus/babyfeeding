@@ -57,7 +57,30 @@ angular.module('starter.services', [])
 
     repository.getTracks = function(length, obj, callback){        
         this.db.transaction(function(tx){            
-            tx.executeSql('SELECT * FROM tracks ORDER BY endTime ASC LIMIT ?', [length],
+            tx.executeSql('SELECT * FROM tracks ORDER BY endTime DESC LIMIT ?', [length],
+                function(tx, results) {                    
+                    var len = results.rows.length, i;
+                    if (len == 0){
+                        return undefined;
+                    }
+                    for(i=0; i<len; i++){
+                        obj.push(results.rows.item(i));
+                    }
+                    callback();
+                }, function (t, e) {
+                  // couldn't read database
+                  console.log('unknown: ' + e.message);
+                });
+        });
+    };
+
+    repository.getTracksByDay = function(days, obj, callback){
+        var currdate = new Date();
+        currdate.setDate(currdate.getDate() - days);
+        currdate.setHours(0, 0, 0, 0);
+
+        this.db.transaction(function(tx){            
+            tx.executeSql('SELECT * FROM tracks WHERE endTime > ? ORDER BY endTime DESC LIMIT ?', [length, currdate.getTime()],
                 function(tx, results) {                    
                     var len = results.rows.length, i;
                     if (len == 0){
@@ -78,7 +101,7 @@ angular.module('starter.services', [])
         this.db.transaction(function(tx){            
             tx.executeSql('SELECT COUNT(id) as count FROM tracks', [],
                 function(tx, results) {
-                    if (len >= results.rows.item(0).count){
+                    if (len >= results.rows.item(0).count){                        
                         more = false;                        
                     }
                     callback();

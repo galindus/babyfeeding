@@ -4,9 +4,10 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'pascalprecht.translate', 'starter.controllers', 'starter.services'])
+angular.module('starter', ['ionic', 'pascalprecht.translate', 'timeRelative', 'starter.controllers', 'starter.services'])
 
 .run(function($ionicPlatform) {
+
   $ionicPlatform.ready(function() {
     if(window.StatusBar) {
       // org.apache.cordova.statusbar required
@@ -17,7 +18,6 @@ angular.module('starter', ['ionic', 'pascalprecht.translate', 'starter.controlle
 
 .config(function($stateProvider, $urlRouterProvider) {
   $stateProvider
-
     .state('app', {
       url: "/app",
       abstract: true,
@@ -64,7 +64,7 @@ angular.module('starter', ['ionic', 'pascalprecht.translate', 'starter.controlle
       }
     });
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/app/track');
+  $urlRouterProvider.otherwise('/login');
 })
 
 .config(function($translateProvider){
@@ -72,4 +72,3 @@ angular.module('starter', ['ionic', 'pascalprecht.translate', 'starter.controlle
   $translateProvider.translations('en', translations_en);
   $translateProvider.preferredLanguage('es');
 });
-

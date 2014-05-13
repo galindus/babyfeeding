@@ -929,7 +929,7 @@ var FlipClock;
 			var t = this;
 			
 			setTimeout(function() {
-				t.$obj.removeClass(t.factory.classes.play);
+				// t.$obj.removeClass(t.factory.classes.play);
 			}, this.factory.timer.interval);
 		},
 		

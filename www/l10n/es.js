@@ -15,8 +15,9 @@ var translations_es = {
     Stop: 'Detener',
     Pause: 'Pausa',
     left: 'Izquierda',
-    rigth: 'Derecha',
+    right: 'Derecha',
     bottle: 'Biberon',
     'Main menu': 'Menu',
-    history: 'Historial'
+    history: 'Historial',
+    'Time feeding:': 'Tiempo total:'
 };

@@ -37,10 +37,10 @@
     </div>
     <div class="card">
         <label class="item item-input item-stacked-label">
-            <span class="input-label">{{ 'Last feed' | translate }}</span> {{ last.endTime | date : 'M/d/yy h:mm a'}}
+            <span class="input-label">{{ 'Last feed' | translate }}</span> <time relative datetime="{{ last.endTime | date : 'short' }}"></time>
         </label>
         <label class="item item-input item-stacked-label">
-            <span class="input-label">{{ 'Duration' | translate }}</span> {{ last.timeInterval/60 | number: 2 }} {{ 'minutes' | translate}}
+            <span class="input-label">{{ 'Duration' | translate }}</span> {{ duration(last.timeInterval, 'seconds') }}
         </label>
     </div>
   </ion-content>
