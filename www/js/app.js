@@ -11,8 +11,12 @@ angular.module('starter', ['ionic', 'pascalprecht.translate', 'timeRelative', 's
   $ionicPlatform.ready(function() {
     if(window.StatusBar) {
       // org.apache.cordova.statusbar required
-      StatusBar.styleDefault();
+      StatusBar.styleDefault();            
     }
+
+    if(window.plugins){
+      window.plugins.insomnia.keepAwake();
+    }    
   });
 })
 
