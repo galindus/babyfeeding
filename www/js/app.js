@@ -64,7 +64,7 @@ angular.module('starter', ['ionic', 'pascalprecht.translate', 'timeRelative', 's
       }
     });
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/login');
+  $urlRouterProvider.otherwise('/app/track');
 })
 
 .config(function($translateProvider){
