@@ -48,7 +48,7 @@
 
     <!-- Third party plugins -->
     <gap:plugin name="de.appplant.cordova.plugin.background-mode" version="0.5.0" />
-
+    <gap:plugin name="nl.x-services.plugins.insomnia" />
     <access origin="*"/>
 
 </widget>

@@ -8,58 +8,35 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('TrackCtrl', function($scope, trackRepository){    
-    // Prevent counter from start on click timer
-    $('.your-clock').click(function(e){
-        e.preventDefault();
-    });
-    $scope.last = {};
-    
-    $scope.bbc = $scope.blc = $scope.brc = "button button-stable";
-
-    // track object
-    var pause = false;
-    $scope.track = {};
-    $scope.track.breast = "L";
-    $scope.track.id = undefined;
-
-    // Init timer.
-    $scope.clock = $('.your-clock').FlipClock(3000, {
-            clockFace: 'MinuteCounter',
-            autoStart: false
-        });
-
-    // Set 0
-    $scope.clock.setTime(0);
-
+.controller('TrackCtrl', function($scope, trackRepository){
     // Start count function
     $scope.startCount = function(){
-        if(!pause){
+        if(!$scope.track.pause){
             $scope.track.startTime = Date.now();
             $scope.track.id = undefined;     
         }
-        pause = false;        
+        $scope.track.pause = false;        
         $scope.clock.start();        
     }
 
-    $scope.pauseCount = function(){
+    $scope.pauseCount = function(callback){
         $scope.clock.stop();
         $scope.track.endTime = Date.now();
-        pause = true;
+        $scope.track.pause = true;
         $scope.track.timeInterval = $scope.clock.getTime().getSeconds();        
         if($scope.track.id === undefined){
-            trackRepository.save($scope.track);                       
+            trackRepository.save($scope.track, callback);
             return;
         }
 
-        trackRepository.update($scope.track);
+        trackRepository.update($scope.track, callback);
 
     }
 
     $scope.stopCount = function(){                
         $scope.clock.stop();
         $scope.track.endTime = Date.now();
-        pause = false;
+        $scope.track.pause = false;
         $scope.track.timeInterval = $scope.clock.getTime().getSeconds();        
 
         if($scope.track.id === undefined){
@@ -73,28 +50,120 @@ angular.module('starter.controllers', [])
         $scope.clock.setTime(0);
     }
 
-    $scope.selectBreast = function(breast){
+    $scope.selectBreast = function(breast){        
         $scope.track.breast = breast.charAt(1).toUpperCase();
         $scope.bbc = $scope.blc = $scope.brc = "button button-stable";
         $scope[breast] = "button button-balanced";
     }
 
-    trackRepository.getLastTrack($scope.last, function(){
-        switch ($scope.last.breast){
-            case 'L':
-                $scope.selectBreast('blc');
-                break;
-            case 'R':
-                $scope.selectBreast('brc');
-                break;
-            case 'B':
-                $scope.selectBreast('bbc');
-                break;
-            default:
-                break;
+    goBackground = function(){        
+        if(!($scope.track.startTime > 0))
+            return;
+        
+        if(!$scope.track.pause){
+            $scope.pauseCount(function(){
+                $scope.track.pause = false;                
+                storage.setItem("timer", JSON.stringify($scope.track));            
+            });
+            return;
         }
-        $scope.$apply();
+        
+        storage.setItem("timer", JSON.stringify($scope.track));
+    }
+
+    restoreBackground = function(){ 
+        timer = storage.getItem("timer");        
+        storage.removeItem("timer");
+        $scope.track = JSON.parse(timer);        
+        currtiming = $scope.track.timeInterval;
+        currdate = new Date();
+        
+        if(!$scope.track.pause){
+            currtiming += (currdate.getTime() - $scope.track.endTime)/1000;
+        }
+        
+        if('clock' in $scope){            
+            $scope.clock.setTime(currtiming);            
+        }else{
+            // Init timer. There is some delay, this is hacky but in general it is 1 second behind the right timing.
+            $scope.clock = $('.your-clock').FlipClock(currtiming, {
+                clockFace: 'MinuteCounter',
+                autoStart: false
+            });
+        }
+
+        if(!$scope.track.pause){
+            $scope.clock.start();
+        }
+
+        getLastTrack(1);        
+    }
+
+    getLastTrack = function(row){        
+        row = typeof row !== 'undefined' ? row : 0;        
+        trackRepository.getLastTrack($scope.last, function(){            
+            switch ($scope.last.breast){
+                case 'L':
+                    $scope.selectBreast('blc');
+                    break;
+                case 'R':
+                    $scope.selectBreast('brc');
+                    break;
+                case 'B':
+                    $scope.selectBreast('bbc');
+                    break;
+                default:
+                    break;
+            } 
+            
+        },
+        row);
+    }
+
+    // Listen view change event and store progress.
+    $scope.$on('$locationChangeStart', function(event) {        
+        goBackground();
+        // document.removeEventListener("pause", goBackground, false);
+        // document.removeEventListener("resume", restoreBackground, false);
     });
+
+    document.addEventListener("pause", goBackground, false);
+    document.addEventListener("resume", restoreBackground, false);
+
+    // Prevent counter from start on click timer
+    $('.your-clock').click(function(e){
+        e.preventDefault();
+        document.addEventListener("pause", function(){
+
+        }, false);
+    });
+
+    // Load local storage        
+    var storage = window.localStorage;
+
+    $scope.last = {};
+    
+    $scope.bbc = $scope.blc = $scope.brc = "button button-stable";
+
+    if(storage.getItem("timer")){        
+        restoreBackground();
+    }
+    else{
+        // Init timer.
+        $scope.clock = $('.your-clock').FlipClock(0, {
+            clockFace: 'MinuteCounter',
+            autoStart: false
+        });
+        
+        // track object
+        $scope.track = {};
+        $scope.track.pause = false;
+        $scope.track.breast = "L";
+        $scope.track.id = undefined;
+        getLastTrack();
+    }
+
+    
 })
 
 .controller('HistoryCtrl', function($scope, trackRepository){
@@ -146,8 +215,7 @@ angular.module('starter.controllers', [])
         return moment.duration(total, 'seconds').humanize();
     }
 
-    $scope.moreData = function(){
-        console.log($scope.moreDataCanBeLoaded);
+    $scope.moreData = function(){        
         return $scope.moreDataCanBeLoaded;
     }
     
