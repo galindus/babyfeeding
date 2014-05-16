@@ -76,7 +76,7 @@ angular.module('starter.controllers', [])
         storage.removeItem("timer");
         $scope.track = JSON.parse(timer);        
         currtiming = $scope.track.timeInterval;
-        currdate = new Date();
+        currdate = new Date();        
         
         if(!$scope.track.pause){
             currtiming += (currdate.getTime() - $scope.track.endTime)/1000;
@@ -91,7 +91,7 @@ angular.module('starter.controllers', [])
                 autoStart: false
             });
         }
-
+        console.log($scope.clock);
         if(!$scope.track.pause){
             $scope.clock.start();
         }
