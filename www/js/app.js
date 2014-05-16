@@ -15,7 +15,7 @@ angular.module('starter', ['ionic', 'pascalprecht.translate', 'timeRelative', 's
     }
 
     if(window.plugins){
-      window.plugins.insomnia.keepAwake();
+      window.plugin.backgroundMode.enable();
     }    
   });
 })

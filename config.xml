@@ -16,5 +16,5 @@
     <feature name="StatusBar">
       <param name="ios-package" value="CDVStatusBar" onload="true" />
     </feature>
-    <gap:plugin name="nl.x-services.plugins.insomnia" />   
+    <gap:plugin name="de.appplant.cordova.plugin.background-mode" />
 </widget>
