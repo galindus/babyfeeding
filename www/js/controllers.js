@@ -23,7 +23,7 @@ angular.module('starter.controllers', [])
         $scope.clock.pause();
         $scope.track.endTime = Date.now();
         $scope.track.pause = true;
-        $scope.track.timeInterval = $scope.clock.getTime();
+        $scope.track.timeInterval = $scope.clock.getTime();        
         if($scope.track.id === undefined){
             trackRepository.save($scope.track, callback);
             return;
@@ -47,7 +47,8 @@ angular.module('starter.controllers', [])
             trackRepository.update($scope.track);
         }
 
-        $scope.last = $scope.track;        
+        $scope.last = $scope.track;
+        $scope.track.startTime = 0;
     }
 
     $scope.selectBreast = function(breast){        
@@ -62,7 +63,7 @@ angular.module('starter.controllers', [])
         
         if(!$scope.track.pause){
             $scope.pauseCount(function(){
-                $scope.track.pause = false;                
+                $scope.track.pause = false;                                
                 storage.setItem("timer", JSON.stringify($scope.track));            
             });
             return;
@@ -75,7 +76,7 @@ angular.module('starter.controllers', [])
         timer = storage.getItem("timer");        
         storage.removeItem("timer");
         $scope.track = JSON.parse(timer);        
-        currtiming = $scope.track.timeInterval;
+        currtiming = $scope.track.timeInterval*1000;
         currdate = new Date();        
         
         if(!$scope.track.pause){
