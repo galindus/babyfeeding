@@ -15,15 +15,15 @@ angular.module('starter.controllers', [])
             $scope.track.startTime = Date.now();
             $scope.track.id = undefined;     
         }
-        $scope.track.pause = false;        
+        $scope.track.pause = false;
         $scope.clock.start();        
     }
 
     $scope.pauseCount = function(callback){
-        $scope.clock.stop();
+        $scope.clock.pause();
         $scope.track.endTime = Date.now();
         $scope.track.pause = true;
-        $scope.track.timeInterval = $scope.clock.getTime().getSeconds();        
+        $scope.track.timeInterval = $scope.clock.getTime();
         if($scope.track.id === undefined){
             trackRepository.save($scope.track, callback);
             return;
@@ -34,10 +34,11 @@ angular.module('starter.controllers', [])
     }
 
     $scope.stopCount = function(){                
-        $scope.clock.stop();
+        $scope.clock.pause();
         $scope.track.endTime = Date.now();
         $scope.track.pause = false;
-        $scope.track.timeInterval = $scope.clock.getTime().getSeconds();        
+        $scope.track.timeInterval = $scope.clock.getTime();
+        $scope.clock.stop();
 
         if($scope.track.id === undefined){
             trackRepository.save($scope.track);                       
@@ -45,9 +46,7 @@ angular.module('starter.controllers', [])
         }else{
             trackRepository.update($scope.track);
         }
-        $scope.last = $scope.track;
-        $scope.clock.reset();
-        $scope.clock.setTime(0);
+        $scope.last = $scope.track;        
     }
 
     $scope.selectBreast = function(breast){        
@@ -79,19 +78,16 @@ angular.module('starter.controllers', [])
         currdate = new Date();        
         
         if(!$scope.track.pause){
-            currtiming += (currdate.getTime() - $scope.track.endTime)/1000;
+            currtiming += (currdate.getTime() - $scope.track.endTime) + 800;
         }
         
         if('clock' in $scope){            
             $scope.clock.setTime(currtiming);            
         }else{
             // Init timer. There is some delay, this is hacky but in general it is 1 second behind the right timing.
-            $scope.clock = $('.your-clock').FlipClock(currtiming, {
-                clockFace: 'MinuteCounter',
-                autoStart: false
-            });
+            $scope.clock = $('.your-clock').tinytimer(currtiming);
         }
-        console.log($scope.clock);
+        
         if(!$scope.track.pause){
             $scope.clock.start();
         }
@@ -130,14 +126,6 @@ angular.module('starter.controllers', [])
     document.addEventListener("pause", goBackground, false);
     document.addEventListener("resume", restoreBackground, false);
 
-    // Prevent counter from start on click timer
-    $('.your-clock').click(function(e){
-        e.preventDefault();
-        document.addEventListener("pause", function(){
-
-        }, false);
-    });
-
     // Load local storage        
     var storage = window.localStorage;
 
@@ -150,11 +138,8 @@ angular.module('starter.controllers', [])
     }
     else{
         // Init timer.
-        $scope.clock = $('.your-clock').FlipClock(0, {
-            clockFace: 'MinuteCounter',
-            autoStart: false
-        });
-        
+        $scope.clock = $('.your-clock').tinytimer(0);
+
         // track object
         $scope.track = {};
         $scope.track.pause = false;
