@@ -42,7 +42,7 @@
             },
 
             getTime: function(){
-                return that.count;
+                return that.count/1000;
             },
 
             pause: function(){

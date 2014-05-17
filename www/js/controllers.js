@@ -46,6 +46,7 @@ angular.module('starter.controllers', [])
         }else{
             trackRepository.update($scope.track);
         }
+
         $scope.last = $scope.track;        
     }
 
@@ -56,7 +57,7 @@ angular.module('starter.controllers', [])
     }
 
     goBackground = function(){        
-        if(!($scope.track.startTime > 0))
+        if(!($scope.clock.getTime() > 0))
             return;
         
         if(!$scope.track.pause){
