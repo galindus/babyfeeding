@@ -2,11 +2,16 @@ angular.module('starter.controllers', [])
 
 .controller('AppCtrl', function($scope) {
     moment.lang('es', {});
-    
+
     $scope.duration = function(dur, type){
         return moment.duration(dur, type).humanize();
     }
 
+    document.addEventListener("pause", function(){
+        if('track' in $scope){
+            $scope.goBackground();
+        }   
+    }, false);
 })
 
 .controller('TrackCtrl', function($scope, trackRepository){
@@ -57,7 +62,7 @@ angular.module('starter.controllers', [])
         $scope[breast] = "button button-balanced";
     }
 
-    goBackground = function(){        
+    $scope.goBackground = function(){        
         if(!($scope.clock.getTime() > 0))
             return;
         console.log("going background");
@@ -72,8 +77,7 @@ angular.module('starter.controllers', [])
         storage.setItem("timer", JSON.stringify($scope.track));
     }
 
-    restoreBackground = function(){ 
-        console.log("restoring background");
+    restoreBackground = function(){         
         timer = storage.getItem("timer");        
         storage.removeItem("timer");
         $scope.track = JSON.parse(timer);        
@@ -122,13 +126,8 @@ angular.module('starter.controllers', [])
 
     // Listen view change event and store progress.
     $scope.$on('$locationChangeStart', function(event) {        
-        goBackground();
-        // document.removeEventListener("pause", goBackground, false);
-        // document.removeEventListener("resume", restoreBackground, false);
+        $scope.goBackground();
     });
-
-    document.addEventListener("pause", goBackground, false);
-    document.addEventListener("resume", restoreBackground, false);
 
     // Load local storage        
     var storage = window.localStorage;
