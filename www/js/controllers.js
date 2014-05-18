@@ -119,7 +119,12 @@ angular.module('starter.controllers', [])
     // Listen view change event and store progress.
     $scope.$on('$locationChangeStart', function(event) {        
         $scope.goBackground();
+        document.removeEventListener("pause", $scope.goBackground, false);
+        document.removeEventListener("resume", restoreBackground, false);
     });
+
+    document.addEventListener("pause", $scope.goBackground, false);
+    document.addEventListener("resume", restoreBackground, false);
 
     // Load local storage        
     var storage = window.localStorage;
