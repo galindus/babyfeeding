@@ -58,7 +58,7 @@
 
             running: false
         });
-        that.setTime(startTime);
+        that.setTime(startTime, true);
         return that;
     };
 }( jQuery ));

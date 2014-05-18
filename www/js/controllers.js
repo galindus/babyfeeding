@@ -83,9 +83,9 @@ angular.module('starter.controllers', [])
         }
         
         if('clock' in $scope){            
-            $scope.clock.setTime(currtiming);
+            $scope.clock.setTime(currtiming, true);
         }else{            
-            $scope.clock = $('.your-clock').tinytimer(currtiming, true);
+            $scope.clock = $('.your-clock').tinytimer(currtiming);
         }
         
         if(!$scope.track.pause){
