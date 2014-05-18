@@ -3,8 +3,7 @@ angular.module('starter.controllers', [])
 .controller('AppCtrl', function($scope, $translate) {
     storage = window.localStorage;
     var settings = storage.getItem("settings");
-    $scope.settings = (settings !== null) ? JSON.parse(settings) : {}
-    console.log($scope.settings);
+    $scope.settings = (settings !== null) ? JSON.parse(settings) : {}    
 
     // Set defaults
     $scope.settings.lang = typeof $scope.settings.lang !== 'undefined' ? $scope.settings.lang : {code: 'en'};        
@@ -67,8 +66,7 @@ angular.module('starter.controllers', [])
 
     $scope.goBackground = function(){        
         if(!($scope.clock.getTime() > 0))
-            return;
-        console.log("going background");
+            return;        
         if(!$scope.track.pause){
             $scope.pauseCount(function(){
                 $scope.track.pause = false;                                
@@ -129,9 +127,11 @@ angular.module('starter.controllers', [])
     $scope.$on('$locationChangeStart', function(event) {        
         $scope.goBackground();
         document.removeEventListener("pause", $scope.goBackground, false);
+        document.removeEventListener("pause", restoreBackground, false);
     });
 
     document.addEventListener("pause", $scope.goBackground, false);
+    document.addEventListener("pause", restoreBackground, false);
 
     $scope.last = {};
     
@@ -201,8 +201,7 @@ angular.module('starter.controllers', [])
         return moment.duration(total, 'seconds').humanize();
     }
 
-    $scope.moreData = function(){      
-        console.log("more");  
+    $scope.moreData = function(){              
         return $scope.moreDataCanBeLoaded;
     }
     

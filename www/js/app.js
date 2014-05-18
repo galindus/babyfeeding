@@ -66,5 +66,6 @@ angular.module('starter', ['ionic', 'pascalprecht.translate', 'timeRelative', 's
 .config(function($translateProvider){
   $translateProvider.translations('es', translations_es);
   $translateProvider.translations('en', translations_en);
+  $translateProvider.translations('ca', translations_ca);
   $translateProvider.preferredLanguage('en');
 });
