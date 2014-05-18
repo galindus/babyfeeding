@@ -6,12 +6,6 @@ angular.module('starter.controllers', [])
     $scope.duration = function(dur, type){
         return moment.duration(dur, type).humanize();
     }
-
-    document.addEventListener("pause", function(){
-        if('track' in $scope){
-            $scope.goBackground();
-        }   
-    }, false);
 })
 
 .controller('TrackCtrl', function($scope, trackRepository){
@@ -94,8 +88,6 @@ angular.module('starter.controllers', [])
             $scope.clock = $('.your-clock').tinytimer(currtiming, true);
         }
         
-        console.log($scope.track.pause);
-        console.log($scope.track);
         if(!$scope.track.pause){
             $scope.clock.start();
         }
