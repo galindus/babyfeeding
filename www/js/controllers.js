@@ -1,7 +1,15 @@
 angular.module('starter.controllers', [])
 
-.controller('AppCtrl', function($scope) {
-    moment.lang('es', {});
+.controller('AppCtrl', function($scope, $translate) {
+    storage = window.localStorage;
+    var settings = storage.getItem("settings");
+    $scope.settings = (settings !== null) ? JSON.parse(settings) : {}
+    console.log($scope.settings);
+
+    // Set defaults
+    $scope.settings.lang = typeof $scope.settings.lang !== 'undefined' ? $scope.settings.lang : {code: 'en'};        
+    
+    $translate.use($scope.settings.lang.code);
 
     $scope.duration = function(dur, type){
         return moment.duration(dur, type).humanize();
@@ -9,6 +17,7 @@ angular.module('starter.controllers', [])
 })
 
 .controller('TrackCtrl', function($scope, trackRepository){
+    moment.lang($scope.settings.lang.code);
     // Start count function
     $scope.startCount = function(){
         if(!$scope.track.pause){
@@ -72,9 +81,9 @@ angular.module('starter.controllers', [])
     }
 
     restoreBackground = function(){         
-        timer = storage.getItem("timer");        
+        timer = storage.getItem("timer");
         storage.removeItem("timer");
-        $scope.track = JSON.parse(timer);        
+        $scope.track = JSON.parse(timer);
         currtiming = $scope.track.timeInterval*1000;
         currdate = new Date();
         
@@ -96,7 +105,7 @@ angular.module('starter.controllers', [])
     }
 
     getLastTrack = function(row){        
-        row = typeof row !== 'undefined' ? row : 0;        
+        row = typeof row !== 'undefined' ? row : 0;
         trackRepository.getLastTrack($scope.last, function(){            
             switch ($scope.last.breast){
                 case 'L':
@@ -124,9 +133,6 @@ angular.module('starter.controllers', [])
 
     document.addEventListener("pause", $scope.goBackground, false);
 
-    // Load local storage        
-    var storage = window.localStorage;
-
     $scope.last = {};
     
     $scope.bbc = $scope.blc = $scope.brc = "button button-stable";
@@ -150,6 +156,7 @@ angular.module('starter.controllers', [])
 })
 
 .controller('HistoryCtrl', function($scope, trackRepository){
+    moment.lang($scope.settings.lang.code);
     $scope.limit = 0;
     $scope.tracks = [];    
     $scope.moreDataCanBeLoaded = true;    
@@ -179,13 +186,9 @@ angular.module('starter.controllers', [])
                 lend+=1;
                 $scope.days[lend] = [];
                 $scope.days[lend].push($scope.tracks[i]);
-            }
+            }            
 
-            trackRepository.countTracks($scope.tracks.length, $scope.moreDataCanBeLoaded, function(){
-                $scope.$broadcast('scroll.infiniteScrollComplete');
-            });
-
-            $scope.$apply();            
+            $scope.$broadcast('scroll.infiniteScrollComplete');
         });
     }    
 
@@ -198,11 +201,25 @@ angular.module('starter.controllers', [])
         return moment.duration(total, 'seconds').humanize();
     }
 
-    $scope.moreData = function(){        
+    $scope.moreData = function(){      
+        console.log("more");  
         return $scope.moreDataCanBeLoaded;
     }
     
     // Get 2 days.
     $scope.getItems(2);
 
+})
+
+.controller('SettingsCtrl', function($rootScope, $scope, $translate){
+    $scope.languages = [
+        {code: 'es', text: 'lang_es'},
+        {code: 'en', text: 'lang_en'},
+        {code: 'ca', text: 'lang_ca'}
+    ];
+
+    $scope.setLanguage = function(){
+        storage.setItem("settings", JSON.stringify($scope.settings));        
+        $translate.use($scope.settings.lang.code)
+    }
 })

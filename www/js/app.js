@@ -50,31 +50,21 @@ angular.module('starter', ['ionic', 'pascalprecht.translate', 'timeRelative', 's
         }
       }
     })
-    .state('app.playlists', {
-      url: "/playlists",
+    
+    .state('app.settings', {
+      url: "/settings",
       views: {
         'menuContent' :{
-          templateUrl: "templates/playlists.html",
-          controller: 'PlaylistsCtrl'
-        }
-      }
-    })
-
-    .state('app.single', {
-      url: "/playlists/:playlistId",
-      views: {
-        'menuContent' :{
-          templateUrl: "templates/playlist.html",
-          controller: 'PlaylistCtrl'
+          templateUrl: "templates/settings.html",
+          controller: 'SettingsCtrl'
         }
       }
     });
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/app/track');
 })
-
 .config(function($translateProvider){
   $translateProvider.translations('es', translations_es);
   $translateProvider.translations('en', translations_en);
-  $translateProvider.preferredLanguage('es');
+  $translateProvider.preferredLanguage('en');
 });

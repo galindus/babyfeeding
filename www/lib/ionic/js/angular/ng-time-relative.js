@@ -46,8 +46,7 @@ function directive($timeout, moment) {
     },
     link: function(scope, element, attrs) {
       var timeout;      
-      scope.$watch('datetime', function(dateString) {
-        moment.lang('es');
+      scope.$watch('datetime', function(dateString) {        
         $timeout.cancel(timeout);        
         var date = moment(dateString);
         if (!date) return;

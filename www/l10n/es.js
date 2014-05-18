@@ -7,6 +7,7 @@ var translations_es = {
     lang_es: 'Español',
     lang_fr: 'Frances',
     lang_it: 'Italiano',
+    lang_ca: 'Catalan',
     track: 'Registrar',
     'Last feed': 'Ultima toma',
     'Duration': 'Duración',
@@ -19,5 +20,6 @@ var translations_es = {
     bottle: 'Biberon',
     'Main menu': 'Menu',
     history: 'Historial',
-    'Time feeding:': 'Tiempo total:'
+    'Time feeding:': 'Tiempo total:',
+    settings: 'Configuración'
 };

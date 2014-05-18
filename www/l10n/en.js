@@ -7,5 +7,6 @@ var translations_en = {
     lang_es: 'Spanish',
     lang_fr: 'French',
     lang_it: 'Italian',
+    lang_ca: 'Catalan',
     track: 'Track'
 };
