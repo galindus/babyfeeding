@@ -2,6 +2,7 @@ angular.module('starter.controllers', [])
 
 .controller('AppCtrl', function($scope) {
     moment.lang('es', {});
+    
     $scope.duration = function(dur, type){
         return moment.duration(dur, type).humanize();
     }
@@ -48,7 +49,6 @@ angular.module('starter.controllers', [])
         }
 
         $scope.last = $scope.track;
-        $scope.track.startTime = 0;
     }
 
     $scope.selectBreast = function(breast){        
@@ -60,7 +60,7 @@ angular.module('starter.controllers', [])
     goBackground = function(){        
         if(!($scope.clock.getTime() > 0))
             return;
-        
+        console.log("going background");
         if(!$scope.track.pause){
             $scope.pauseCount(function(){
                 $scope.track.pause = false;                                
@@ -73,23 +73,25 @@ angular.module('starter.controllers', [])
     }
 
     restoreBackground = function(){ 
+        console.log("restoring background");
         timer = storage.getItem("timer");        
         storage.removeItem("timer");
         $scope.track = JSON.parse(timer);        
         currtiming = $scope.track.timeInterval*1000;
-        currdate = new Date();        
+        currdate = new Date();
         
         if(!$scope.track.pause){
             currtiming += (currdate.getTime() - $scope.track.endTime) + 800;
         }
         
         if('clock' in $scope){            
-            $scope.clock.setTime(currtiming);            
-        }else{
-            // Init timer. There is some delay, this is hacky but in general it is 1 second behind the right timing.
-            $scope.clock = $('.your-clock').tinytimer(currtiming);
+            $scope.clock.setTime(currtiming);
+        }else{            
+            $scope.clock = $('.your-clock').tinytimer(currtiming, true);
         }
         
+        console.log($scope.track.pause);
+        console.log($scope.track);
         if(!$scope.track.pause){
             $scope.clock.start();
         }
@@ -140,7 +142,7 @@ angular.module('starter.controllers', [])
     }
     else{
         // Init timer.
-        $scope.clock = $('.your-clock').tinytimer(0);
+        $scope.clock = $('.your-clock').tinytimer(0, true);
 
         // track object
         $scope.track = {};
