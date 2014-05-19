@@ -141,8 +141,9 @@ angular.module('starter.controllers', [])
     $scope.last = {};
     
     $scope.bbc = $scope.blc = $scope.brc = "button button-stable";
-
-    if(storage.getItem("timer")){        
+    var testtimer = storage.getItem("timer");
+    console.log(testtimer, testtimmer === null);
+    if(storage.getItem("timer")){
         restoreBackground();
     }
     else{
