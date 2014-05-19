@@ -73,7 +73,7 @@ angular.module('starter.controllers', [])
             console.log("go background: timer paused, setting pause status.");
             $scope.pauseCount(function(){
                 $scope.track.pause = false;                                
-                storage.setI tem("timer", JSON.stringify($scope.track));            
+                storage.setItem("timer", JSON.stringify($scope.track));            
             });
             return;
         }
