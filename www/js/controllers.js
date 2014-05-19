@@ -64,21 +64,25 @@ angular.module('starter.controllers', [])
         $scope[breast] = "button button-balanced";
     }
 
-    $scope.goBackground = function(){        
+    $scope.goBackground = function(){ 
+        console.log("go background");
         if(!($scope.clock.getTime() > 0))
-            return;        
+            console.log("go background: no timer running exit.");
+            return;
         if(!$scope.track.pause){
+            console.log("go background: timer paused, setting pause status.");
             $scope.pauseCount(function(){
                 $scope.track.pause = false;                                
-                storage.setItem("timer", JSON.stringify($scope.track));            
+                storage.setI tem("timer", JSON.stringify($scope.track));            
             });
             return;
         }
-        
+        console.log("go background: timer running storing status.");
         storage.setItem("timer", JSON.stringify($scope.track));
     }
 
     restoreBackground = function(){         
+        console.log("restoring background");
         timer = storage.getItem("timer");
         storage.removeItem("timer");
         $scope.track = JSON.parse(timer);
@@ -96,6 +100,7 @@ angular.module('starter.controllers', [])
         }
         
         if(!$scope.track.pause){
+            console.log("restoring background: start clock");
             $scope.clock.start();
         }
 
