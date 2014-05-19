@@ -64,27 +64,28 @@ angular.module('starter.controllers', [])
         $scope[breast] = "button button-balanced";
     }
 
-    $scope.goBackground = function(){ 
-        console.log("go background");
-        if(!($scope.clock.getTime() > 0))
-            console.log("go background: no timer running exit.");
+    $scope.goBackground = function(){         
+        if(!($scope.clock.getTime() > 0)){            
             return;
-        if(!$scope.track.pause){
-            console.log("go background: timer paused, setting pause status.");
+        }
+        
+        if(!$scope.track.pause){            
             $scope.pauseCount(function(){
                 $scope.track.pause = false;                                
                 storage.setItem("timer", JSON.stringify($scope.track));            
             });
             return;
         }
-        console.log("go background: timer running storing status.");
+        
         storage.setItem("timer", JSON.stringify($scope.track));
     }
 
     restoreBackground = function(){         
-        console.log("restoring background");
         timer = storage.getItem("timer");
-        storage.removeItem("timer");
+        storage.removeItem("timer");        
+        if(timer === null)
+            return;
+        
         $scope.track = JSON.parse(timer);
         currtiming = $scope.track.timeInterval*1000;
         currdate = new Date();
@@ -99,8 +100,7 @@ angular.module('starter.controllers', [])
             $scope.clock = $('.your-clock').tinytimer(currtiming);
         }
         
-        if(!$scope.track.pause){
-            console.log("restoring background: start clock");
+        if(!$scope.track.pause){            
             $scope.clock.start();
         }
 
@@ -141,8 +141,7 @@ angular.module('starter.controllers', [])
     $scope.last = {};
     
     $scope.bbc = $scope.blc = $scope.brc = "button button-stable";
-    var testtimer = storage.getItem("timer");
-    console.log(testtimer, testtimmer === null);
+    var testtimer = storage.getItem("timer");    
     if(storage.getItem("timer")){
         restoreBackground();
     }
