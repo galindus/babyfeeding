@@ -2,7 +2,7 @@ var translations_ca = {
     search: 'Cerca',    
     options: 'Opcions',
     credits: 'Credits',
-    language: 'Llengüa',
+    language: 'Idioma',
     lang_en: 'Anglès',
     lang_es: 'Espanyol',
     lang_fr: 'Frances',
