@@ -132,11 +132,11 @@ angular.module('starter.controllers', [])
     $scope.$on('$locationChangeStart', function(event) {        
         $scope.goBackground();
         document.removeEventListener("pause", $scope.goBackground, false);
-        document.removeEventListener("pause", restoreBackground, false);
+        document.removeEventListener("resume", restoreBackground, false);
     });
 
     document.addEventListener("pause", $scope.goBackground, false);
-    document.addEventListener("pause", restoreBackground, false);
+    document.addEventListener("resume", restoreBackground, false);
 
     $scope.last = {};
     
