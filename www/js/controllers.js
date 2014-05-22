@@ -197,6 +197,7 @@ angular.module('starter.controllers', [])
 
             trackRepository.countTracks(lent, $scope.moreDataCanBeLoaded);
             $scope.$broadcast('scroll.refreshComplete');
+            $scope.$apply();
         });
     }    
 
