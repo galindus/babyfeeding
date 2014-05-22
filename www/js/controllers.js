@@ -13,6 +13,7 @@ angular.module('starter.controllers', [])
     $scope.duration = function(dur, type){
         return moment.duration(dur, type).humanize();
     }
+
 })
 
 .controller('TrackCtrl', function($scope, trackRepository){
@@ -160,16 +161,17 @@ angular.module('starter.controllers', [])
     
 })
 
-.controller('HistoryCtrl', function($scope, trackRepository){
+.controller('HistoryCtrl', function($scope, trackRepository){    
     moment.lang($scope.settings.lang.code);
     $scope.limit = 0;
-    $scope.tracks = [];    
-    $scope.moreDataCanBeLoaded = true;    
-    $scope.getItems = function(increase){
-        $scope.limit += increase;                
+    $scope.tracks = [];   
+    $scope.moreDataCanBeLoaded = true;
+    $scope.getItems = function(increase){        
+        $scope.limit += increase;
         $scope.days = [];        
-        $scope.tracks = [];
-        trackRepository.getTracksByDay($scope.limit, $scope.tracks, function(){            
+        $scope.tracks = [];        
+        trackRepository.getTracksByDay($scope.limit, $scope.tracks, function(){ 
+            console.log("limit", $scope.limit);
             var lent = $scope.tracks.length, lend = undefined, i;            
             for(i=0;i<lent;i++){
                 if(lend == undefined){
@@ -191,11 +193,15 @@ angular.module('starter.controllers', [])
                 lend+=1;
                 $scope.days[lend] = [];
                 $scope.days[lend].push($scope.tracks[i]);
-            }            
+            } 
 
-            $scope.$broadcast('scroll.infiniteScrollComplete');
+            trackRepository.countTracks(lent, $scope.moreDataCanBeLoaded);
+            $scope.$broadcast('scroll.refreshComplete');
         });
     }    
+
+    // Get 2 days.
+    $scope.getItems(1);
 
     $scope.getTotalFeed = function(arr){
         len = arr.length;
@@ -206,12 +212,6 @@ angular.module('starter.controllers', [])
         return moment.duration(total, 'seconds').humanize();
     }
 
-    $scope.moreData = function(){              
-        return $scope.moreDataCanBeLoaded;
-    }
-    
-    // Get 2 days.
-    $scope.getItems(2);
 
 })
 

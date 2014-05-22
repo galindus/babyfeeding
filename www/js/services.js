@@ -93,25 +93,37 @@ angular.module('starter.services', [])
     };
 
     repository.getTracksByDay = function(days, obj, callback){
-        var currdate = new Date();
-        currdate.setDate(currdate.getDate() - days);
-        currdate.setHours(0, 0, 0, 0);
-
-        this.db.transaction(function(tx){            
-            tx.executeSql('SELECT * FROM tracks WHERE endTime > ? ORDER BY endTime DESC LIMIT ?', [length, currdate.getTime()],
-                function(tx, results) {                    
-                    var len = results.rows.length, i;
-                    if (len == 0){
-                        return undefined;
-                    }
-                    for(i=0; i<len; i++){
-                        obj.push(results.rows.item(i));
-                    }
-                    callback();
-                }, function (t, e) {
-                  // couldn't read database
-                  console.log('unknown: ' + e.message);
+        var that = this;
+        that.db.transaction(function(tx1){
+            tx1.executeSql('SELECT * FROM tracks ORDER BY endTime DESC LIMIT 1', [], function(tx1, results1){
+                var len = results1.rows.length;
+                if (len == 0){
+                    return undefined;
+                }                
+                var currdate = new Date(results1.rows.item(0).endTime);
+                currdate.setDate(currdate.getDate() - days);
+                currdate.setHours(0, 0, 0, 0);
+                console.log(currdate);
+                that.db.transaction(function(tx){                    
+                    tx.executeSql('SELECT * FROM tracks WHERE endTime > ? ORDER BY endTime DESC LIMIT ?', [length, currdate.getTime()],
+                    function(tx, results) {                    
+                        var len = results.rows.length, i;
+                        if (len == 0){
+                            return undefined;
+                        }
+                        for(i=0; i<len; i++){
+                            obj.push(results.rows.item(i));
+                        }
+                        callback();
+                    }, function (t, e) {
+                      // couldn't read database
+                      console.log('unknown: ' + e.message);
+                    });
                 });
+            }, function(t, e){
+                // couldn't read database
+                console.log('unknown: ' + e.message);
+            });
         });
     };
 
@@ -122,7 +134,8 @@ angular.module('starter.services', [])
                     if (len >= results.rows.item(0).count){                        
                         more = false;                        
                     }
-                    callback();
+                    if (typeof callback === 'function')
+                        callback();
                 }, function (t, e) {
                   // couldn't read database
                   console.log('unknown: ' + e.message);
