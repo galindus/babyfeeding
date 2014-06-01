@@ -113,8 +113,7 @@ angular.module('starter.services', [])
                 }                
                 var currdate = new Date(results1.rows.item(0).endTime);
                 currdate.setDate(currdate.getDate() - days);
-                currdate.setHours(0, 0, 0, 0);
-                console.log(currdate);
+                currdate.setHours(0, 0, 0, 0);                
                 that.db.transaction(function(tx){                    
                     tx.executeSql('SELECT * FROM tracks WHERE endTime > ? ORDER BY endTime DESC LIMIT ?', [length, currdate.getTime()],
                     function(tx, results) {                    

@@ -205,8 +205,7 @@ angular.module('starter.controllers', [])
     $translate('Edit').then(function(tran){
         $scope.translations.Edit = tran;
     })
-    $translate('EditRecord').then(function(tran){
-        console.log(tran);
+    $translate('EditRecord').then(function(tran){        
         $scope.translations.EditRecord = tran;
     })
     $translate('Delete').then(function(tran){
@@ -263,8 +262,7 @@ angular.module('starter.controllers', [])
         $scope.limit += increase;
         $scope.days = [];        
         $scope.tracks = [];        
-        trackRepository.getTracksByDay($scope.limit, $scope.tracks, function(){ 
-            console.log("limit", $scope.limit);
+        trackRepository.getTracksByDay($scope.limit, $scope.tracks, function(){             
             var lent = $scope.tracks.length, lend = undefined, i;            
             for(i=0;i<lent;i++){
                 if(lend == undefined){
@@ -310,7 +308,7 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('EditTrackCtrl', function($scope, $translate, $stateParams, $filter, trackRepository){
+.controller('EditTrackCtrl', function($scope, $translate, $stateParams, $filter, $location, trackRepository){
     moment.lang($scope.settings.lang.code);
     $scope.track = {};
     trackRepository.get($stateParams.id, $scope.track, function(){
@@ -339,9 +337,15 @@ angular.module('starter.controllers', [])
 
     $scope.$watch("interval");
 
+    $scope.returnHistory = function(){
+        trackRepository.save($scope.track, function(){
+            $location.path("/app/history");
+        });
+    }
+
 })
 
-.controller('AddTrackCtrl', function($scope, $filter, trackRepository){
+.controller('AddTrackCtrl', function($scope, $filter, $location, trackRepository){
     $scope.track = {
         'startTime' : undefined,
         'endTime': undefined,
@@ -355,7 +359,6 @@ angular.module('starter.controllers', [])
         $scope.track.breast = breast.charAt(1).toUpperCase();
         $scope.bbc = $scope.blc = $scope.brc = "button button-stable";
         $scope[breast] = "button button-balanced";
-        console.log($scope);
     }
 
     Object.defineProperty($scope, 'trackDateStr', {
@@ -387,6 +390,20 @@ angular.module('starter.controllers', [])
         $scope.track.endTime = new Date(moment($scope.trackDateStr + " " + val, 'YYYY-MM-DD HH:mm').valueOf()).getTime();
         $scope.track.timeInterval = ($scope.track.endTime - $scope.track.startTime)/1000;                
         $scope.intervalTime = Math.floor($scope.track.timeInterval/60);
+    }
+
+    $scope.intervalCheck = function(){
+        if(!$scope.intervalTime)
+            return true;
+        if($scope.intervalTime <=0)
+            return true;
+        return false;
+    }
+
+    $scope.saveTrack = function(){
+        trackRepository.save($scope.track, function(){
+            $location.path("/app/history");
+        });
     }
 })
 

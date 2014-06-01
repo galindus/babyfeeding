@@ -28,7 +28,7 @@
             <input type="number" ng-disabled='true' ng-model="intervalTime" /> 
         </label>
     <div class="padding">
-        <button class="button button-block button-positive">{{ 'Save' | translate }}</button>
+        <button class="button button-block button-positive" ng-disabled='intervalCheck()' ng-click="saveTrack()">{{ 'Save' | translate }}</button>
     </div>
     </ion-content>
 </ion-view>
