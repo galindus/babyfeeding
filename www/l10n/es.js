@@ -21,5 +21,6 @@ var translations_es = {
     'Main menu': 'Menu',
     history: 'Historial',
     'Time feeding:': 'Tiempo total:',
-    settings: 'Configuración'
+    settings: 'Configuración',
+    'duration (minutes)': 'Durada (minutos)'
 };

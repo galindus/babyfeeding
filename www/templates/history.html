@@ -1,16 +1,19 @@
 <ion-view title="{{ 'history' | translate }}">
   <ion-nav-buttons side="left">
-    <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+    <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>    
+  </ion-nav-buttons>
+  <ion-nav-buttons side="right">
+    <a href="#/app/track/add" class="button button-icon icon ion-plus-round"></a>
   </ion-nav-buttons>
   <ion-content class="list" on-infinite="getItems(1)">                
-        <div class="card" ng-repeat="day in days">
+        <div class="list card" ng-repeat="day in days">
             <div class="item item-divider">
                 {{ day[0].endTime | date }}
             </div>
             <div class="item item-text-wrap">
-                <label class="item item-input item-stacked-label" ng-repeat="track in day">
-                    <span class="input-label">{{ track.endTime | date: 'hh:mm' }}</span> {{ duration(track.timeInterval, 'seconds') }}                                        
-                </label>
+                <div ng-hold="showActions(track.id)" class="track-item item item-button-right" ng-repeat="track in day">
+                    <b style="float:left;margin-right:15px">{{ track.endTime | date: 'hh:mm' }}</b><p> {{ duration(track.timeInterval, 'seconds') }}</p>
+                </div>
             </div>
             <div class="item item-divider">
                 {{ 'Time feeding: ' | translate }} {{ getTotalFeed(day) }}

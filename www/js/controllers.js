@@ -129,6 +129,10 @@ angular.module('starter.controllers', [])
         row);
     }
 
+    $scope.switchLastRel = function(){
+        $scope.lastRelative = $scope.lastRelative ? false : true;
+    }
+
     // Listen view change event and store progress.
     $scope.$on('$locationChangeStart', function(event) {        
         $scope.goBackground();
@@ -140,7 +144,7 @@ angular.module('starter.controllers', [])
     document.addEventListener("resume", restoreBackground, false);
 
     $scope.last = {};
-    
+    $scope.lastRelative = true;
     $scope.bbc = $scope.blc = $scope.brc = "button button-stable";
     var testtimer = storage.getItem("timer");    
     if(storage.getItem("timer")){
@@ -161,11 +165,91 @@ angular.module('starter.controllers', [])
     
 })
 
-.controller('HistoryCtrl', function($scope, trackRepository){    
+.controller('HistoryCtrl', function($scope, trackRepository, $location, $ionicActionSheet, $ionicGesture, $ionicPopup, $translate){    
     moment.lang($scope.settings.lang.code);
     $scope.limit = 0;
     $scope.tracks = [];   
     $scope.moreDataCanBeLoaded = true;
+    $scope.edit = true;
+    $scope.enableEdit = function(){
+        $scope.edit = $scope.edit ? false : true;        
+    }
+
+    $scope.confirmDelete = function(id){        
+        var confirmPopup = $ionicPopup.confirm({
+            title: 'Delete item',
+            template: 'Are you sure you want to delete this item?'
+        });
+
+        confirmPopup.then(function(res){
+            if(res){
+                trackRepository.deleteTrack(id, function(){
+                    $scope.getItems(0   );
+                });
+            } else {
+                return true;
+            }
+
+        });
+    }
+
+    $scope.translations = {
+            'Edit' : 'Edit',
+            'Delete' : 'Delete',
+            'Edit record' : 'Edit record',
+            'Cancel' : 'Cancel'
+        }
+        
+    $translate('Edit').then(function(tran){
+        $scope.translations.Edit = tran;
+    })
+    $translate('Edit record').then(function(tran){
+        console.log(tran);
+        $scope.translations['Edit record'] = tran;
+    })
+    $translate('Delete').then(function(tran){
+        $scope.translations.Delete = tran;
+    })
+    $translate('Cancel').then(function(tran){
+        $scope.translations.Cancel = tran;
+    })
+
+    // Triggered on item hold
+    $scope.showActions = function(id) {
+        // Show the action sheet
+        $ionicActionSheet.show({
+        buttons: [            
+            { text: $scope.translations['Edit'] },
+        ],
+        destructiveText: $scope.translations['Delete'],
+        titleText: $scope.translations['Edit record'],
+        cancelText: $scope.translations['Cancel'],
+        cancel: function(){
+            return true;
+        },
+        destructiveButtonClicked: function() {
+            $scope.confirmDelete(id);
+            return true;
+        },
+        buttonClicked: function(index){
+            switch(index){
+                case 0:
+                    $location.path( "/app/track/edit/"+id );
+                    return true;               
+                default:
+                    return true;
+            }
+        }
+        });
+    };
+
+    $scope.trackSelected = {};
+    $scope.trackSelected.Id = undefined;
+
+    $scope.itemSelected = function(track) {
+        $scope.trackSelected = track;
+    }
+
     $scope.getItems = function(increase){        
         $scope.limit += increase;
         $scope.days = [];        
@@ -212,8 +296,103 @@ angular.module('starter.controllers', [])
 
         return moment.duration(total, 'seconds').humanize();
     }
+    
+    var elements = angular.element(document.querySelector('.track-item'));
 
+})
 
+.controller('EditTrackCtrl', function($scope, $translate, $stateParams, trackRepository){
+    moment.lang($scope.settings.lang.code);
+    $scope.track = {};
+    trackRepository.get($stateParams.id, $scope.track, function(){
+        $scope.$apply();
+    });
+
+    $scope.date = moment($scope.track.startTime).format('D MMMM YYYY');
+
+    $scope.startTime = function(){
+        return moment($scope.track.startTime).format('D MMMM  YYYY, h:mm a');
+    }
+
+    $scope.endTime = function(){
+        return moment($scope.track.startTime + $scope.track.timeInterval*1000).format('D MMMM YYYY, h:mm a');
+    }
+
+    Object.defineProperty($scope, 'interval', {
+        get: function() {                        
+            return $scope.track.timeInterval/60;
+        },
+        set: function(val){
+            $scope.track.timeInterval = val*60;
+            trackRepository.update($scope.track);
+        }
+    });
+
+    $scope.$watch("interval");
+
+})
+
+.controller('AddTrackCtrl', function($scope, $filter, trackRepository){
+    $scope.track = {
+        'startTime' : undefined,
+        'endTime': undefined,
+        'timeInterval': undefined,
+        'bbc': undefined
+    };
+    $scope.trackDate = new Date();
+    $scope.bbc = $scope.blc = $scope.brc = "button button-stable";
+    
+    $scope.selectBreast = function(breast){        
+        $scope.track.breast = breast.charAt(1).toUpperCase();
+        $scope.bbc = $scope.blc = $scope.brc = "button button-stable";
+        $scope[breast] = "button button-balanced";
+        console.log($scope);
+    }
+
+    Object.defineProperty($scope, 'trackDateStr', {
+        get: function() {                        
+            return $filter("date")($scope.trackDate, 'yyyy-MM-dd');
+        },
+        set: function(val){        
+            $scope.trackDate = new Date(moment(val, 'YYYY-MM-DD').valueOf());            
+        }
+    });
+
+    Object.defineProperty($scope, 'startTime', {
+        get: function() {
+            if($scope.track.startTime === undefined)
+                return undefined;            
+            return $filter("date")(new Date($scope.track.startTime - $scope.trackDate.getTime()), 'HH:mm');
+        },
+        set: function(val){
+            val = $filter("date")($scope.trackDate, 'yyyy-MM-dd') + " " + val;            
+            $scope.track.startTime = new Date(moment(val, 'YYYY-MM-DD HH:mm').valueOf()).getTime();
+        }
+    });
+
+    Object.defineProperty($scope, 'endTime', {
+        get: function() {                                             
+            console.log($scope.track.startTime, $scope.track.timeInterval);
+            return $filter("date")($scope.track.startTime + $scope.timeInterval*1000, 'HH:mm');
+        }
+    });
+
+    Object.defineProperty($scope, 'timeInterval', {
+        get: function() {                        
+            return $scope.track.timeInterval/60;
+        },
+        set: function(val){
+            $scope.track.timeInterval = val*60;
+        }
+    });
+
+    $scope.$watch("endTime", function(val){
+        // console.log(val);
+    })
+
+    $scope.$watch("startTime", function(val){
+        console.log(val);
+    })
 })
 
 .controller('SettingsCtrl', function($rootScope, $scope, $translate){

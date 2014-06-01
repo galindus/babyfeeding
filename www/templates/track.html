@@ -36,12 +36,12 @@
         </div>
     </div>
     <div class="card">
-        <label class="item item-input item-stacked-label">
-            <span class="input-label">{{ 'Last feed' | translate }}</span> <time relative datetime="{{ last.endTime | date : 'short' }}"></time>
+        <label ng-click="switchLastRel()" class="item item-input item-stacked-label">
+            <span class="input-label">{{ 'Last feed' | translate }}</span> <time ng-if="lastRelative" relative datetime="{{ last.endTime | date : 'short' }}"></time><time ng-if="!lastRelative">{{ last.endTime | date : 'short' }}</time>
         </label>
         <label class="item item-input item-stacked-label">
-            <span class="input-label">{{ 'Duration' | translate }}</span> {{ duration(last.timeInterval, 'seconds') }}
-        </label>
+            <span class="input-label">{{ 'Duration' | translate }}</span> {{ duration(last.timeInterval, 'seconds') }}            
+        </label>        
     </div>
   </ion-content>
 </ion-view>

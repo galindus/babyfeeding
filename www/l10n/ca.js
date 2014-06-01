@@ -21,5 +21,10 @@ var translations_ca = {
     'Main menu': 'Menu',
     history: 'Historial',
     'Time feeding:': 'Temps total:',
-    settings: 'Configuració'
+    settings: 'Configuració',
+    'duration (minutes)': 'Durada (minuts)',
+    'Edit': 'Edita',
+    'Delete': 'Suprimeix',
+    'Edit record': 'Menu edició',
+    'Cancel': 'Cancela'
 };

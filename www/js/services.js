@@ -8,13 +8,22 @@ angular.module('starter.services', [])
     });
 
     // TODO: Get record by id.
-    repository.get = function(id){
-        repository.db.executeSql('SELECT * FROM tracks WHERE id=?', [id], function(tx, results){
-            var len = results.rows.length;
-            if (len == 0){
-                return undefined;
-            }
-            return results.rows.item(0);
+    repository.get = function(id, obj, callback){
+        this.db.transaction(function(tx){
+            tx.executeSql('SELECT * FROM tracks WHERE id=?', [id], function(tx, results){
+                var len = results.rows.length;
+                if (len == 0){
+                    return undefined;
+                }
+                item = results.rows.item(0);                
+                obj.id = item.id;
+                obj.startTime = item.startTime;
+                obj.endTime = item.endTime;
+                obj.timeInterval = item.timeInterval;
+                obj.breast = item.breast;
+                if(typeof callback === 'function')
+                        callback();
+            });
         });
     }
 
@@ -65,7 +74,8 @@ angular.module('starter.services', [])
                     obj.endTime = item.endTime;
                     obj.timeInterval = item.timeInterval;
                     obj.breast = item.breast;
-                    callback();
+                    if(typeof callback === 'function')
+                        callback();
                 }, function (t, e) {
                   // couldn't read database
                   console.log('unknown: ' + e.message);
@@ -84,7 +94,8 @@ angular.module('starter.services', [])
                     for(i=0; i<len; i++){
                         obj.push(results.rows.item(i));
                     }
-                    callback();
+                    if(typeof callback === 'function')
+                        callback();
                 }, function (t, e) {
                   // couldn't read database
                   console.log('unknown: ' + e.message);
@@ -114,7 +125,8 @@ angular.module('starter.services', [])
                         for(i=0; i<len; i++){
                             obj.push(results.rows.item(i));
                         }
-                        callback();
+                        if(typeof callback === 'function')
+                            callback();
                     }, function (t, e) {
                       // couldn't read database
                       console.log('unknown: ' + e.message);
@@ -141,6 +153,21 @@ angular.module('starter.services', [])
                   console.log('unknown: ' + e.message);
                 });
         });  
+    }
+
+    repository.deleteTrack = function(id, callback){
+        this.db.transaction(function(tx){
+            tx.executeSql('DELETE FROM tracks WHERE id=?', [id],
+                function(tx, results){
+                    if(results.rowsAffected > 0){
+                        if(typeof callback === 'function')
+                            callback();
+                    }
+                }, function(t, e){
+                    // couldn't read database
+                    console.log('unknown: ' + e.message);
+                });
+        });
     }
 
 

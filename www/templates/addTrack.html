@@ -1,0 +1,34 @@
+<ion-view title="{{'Add record' | translate}}" animation="slide-left-right">
+  <ion-content class="has-header">
+    <div class="breast padding-vertical row" style="padding-top: 30px">     
+        <div class="col" style="text-align: center">   
+            <button ng-class="blc" ng-click="selectBreast('blc')">{{ 'left' | translate }}</button>
+        </div>
+        <div class="col" style="text-align: center">   
+            <button ng-class="bbc" ng-click="selectBreast('bbc')">{{ 'bottle' | translate }}</button>
+        </div>
+        <div class="col" style="text-align: center">   
+            <button ng-class="brc" ng-click="selectBreast('brc')">{{ 'right' | translate }}</button>
+        </div>
+    </div>
+    <label class="item">
+            <span class="input-label">{{ 'Date' | translate }}</span>
+            <input type="date" id="exampleInput" name="input" ng-model="trackDateStr" placeholder="yyyy-MM-dd" min="2014-01-01" max="2014-12-31" required />
+        </label>
+        <label class="item item-input">
+            <span class="input-label">{{ 'Start' | translate }}</span>
+            <input type="time" ng-model="startTime"></label>
+        </label>
+        <label class="item item-input">
+            <span class="input-label">{{ 'End' | translate }}</span>
+            <input type="time" ng-model="endTime"></label>
+        </label>
+        <label class="item item-input">
+            <span class="input-label">{{ 'duration (minutes)' | translate }}</span>
+            <input type="number" ng-model="timeInterval" > 
+        </label>
+    <div class="padding">
+        <button class="button button-block button-positive">{{ 'save' | translate }}</button>
+    </div>
+    </ion-content>
+</ion-view>
