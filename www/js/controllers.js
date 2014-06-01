@@ -402,7 +402,9 @@ angular.module('starter.controllers', [])
 
     $scope.saveTrack = function(){
         trackRepository.save($scope.track, function(){
-            $location.path("/app/history");
+            $scope.$apply(function(){
+                $location.path("/app/history")}
+                );
         });
     }
 })
