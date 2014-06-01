@@ -22,5 +22,16 @@ var translations_es = {
     history: 'Historial',
     'Time feeding:': 'Tiempo total:',
     settings: 'Configuración',
-    'duration (minutes)': 'Durada (minutos)'
+    'duration (minutes)': 'Durada (minutos)',
+    'Edit': 'Edita',
+    'Delete': 'Elimina',
+    'EditRecord': 'Menu edición',
+    'Cancel': 'Cancela',
+    DeleteItem: 'Suprimir',
+    ConfirmDelete: 'Seguro que desea elminiar el registro?',
+    'Date': 'Fecha',
+    'Add record': 'Añadir registro',
+    'End': 'Fin',
+    'Save': 'Guardar',    
+    'Edit track': 'Editar registro'
 };

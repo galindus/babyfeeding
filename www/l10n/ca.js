@@ -25,6 +25,13 @@ var translations_ca = {
     'duration (minutes)': 'Durada (minuts)',
     'Edit': 'Edita',
     'Delete': 'Suprimeix',
-    'Edit record': 'Menu edició',
-    'Cancel': 'Cancela'
+    'EditRecord': 'Menu edició',
+    'Cancel': 'Cancela',
+    DeleteItem: 'Suprimeix',
+    ConfirmDelete: 'Esteu segurs que voleu eliminar el registre?',
+    'Date': 'Data',
+    'Add record': 'Afegeix registre',
+    'End': 'Final',
+    'Save': 'Desar',
+    'Edit track': 'Edita registre'
 };

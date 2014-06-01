@@ -17,18 +17,18 @@
         </label>
         <label class="item item-input">
             <span class="input-label">{{ 'Start' | translate }}</span>
-            <input type="time" ng-model="startTime"></label>
+            <input type="time" ng-model="startTime" ng-change="startModified(startTime)"/>
         </label>
         <label class="item item-input">
             <span class="input-label">{{ 'End' | translate }}</span>
-            <input type="time" ng-model="endTime"></label>
+            <input type="time" ng-model="endTime" ng-change="endModified(endTime)" /></label>
         </label>
         <label class="item item-input">
             <span class="input-label">{{ 'duration (minutes)' | translate }}</span>
-            <input type="number" ng-model="timeInterval" > 
+            <input type="number" ng-disabled='true' ng-model="intervalTime" /> 
         </label>
     <div class="padding">
-        <button class="button button-block button-positive">{{ 'save' | translate }}</button>
+        <button class="button button-block button-positive">{{ 'Save' | translate }}</button>
     </div>
     </ion-content>
 </ion-view>
