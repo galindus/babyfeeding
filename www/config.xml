@@ -57,5 +57,7 @@
         <activity android:launchMode="singleTop" />
     </gap:config-file>
     <icon src="icon.png" />
+    <icon src="splash.png" />
+
 
 </widget>

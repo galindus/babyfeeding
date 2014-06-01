@@ -258,7 +258,8 @@ angular.module('starter.controllers', [])
         $scope.trackSelected = track;
     }
 
-    $scope.getItems = function(increase){        
+    $scope.getItems = function(increase){
+        console.log(increase);       
         $scope.limit += increase;
         $scope.days = [];        
         $scope.tracks = [];        
@@ -384,6 +385,7 @@ angular.module('starter.controllers', [])
     $scope.startModified = function(val){        
         $scope.track.startTime = new Date(moment($scope.trackDateStr + " " + val, 'YYYY-MM-DD HH:mm').valueOf()).getTime();
         $scope.track.timeInterval = ($scope.track.endTime - $scope.track.startTime)/1000;
+        $scope.intervalTime = Math.floor($scope.track.timeInterval/60);
     }
 
     $scope.endModified = function(val){        
