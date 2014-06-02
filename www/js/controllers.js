@@ -338,10 +338,8 @@ angular.module('starter.controllers', [])
 
     $scope.$watch("interval");
 
-    $scope.returnHistory = function(){
-        trackRepository.save($scope.track, function(){
-            $location.path("/app/history");
-        });
+    $scope.returnHistory = function(){        
+        $location.path("/app/history");        
     }
 
 })
