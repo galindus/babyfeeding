@@ -253,16 +253,15 @@ angular.module('starter.controllers', [])
 
     $scope.trackSelected = {};
     $scope.trackSelected.Id = undefined;
+    $scope.tracks = [];
 
     $scope.itemSelected = function(track) {
         $scope.trackSelected = track;
     }
 
-    $scope.getItems = function(increase){
-        console.log(increase);       
+    $scope.getItems = function(increase){              
         $scope.limit += increase;
-        $scope.days = [];        
-        $scope.tracks = [];        
+        $scope.days = [];                        
         trackRepository.getTracksByDay($scope.limit, $scope.tracks, function(){             
             var lent = $scope.tracks.length, lend = undefined, i;            
             for(i=0;i<lent;i++){
@@ -288,7 +287,7 @@ angular.module('starter.controllers', [])
             } 
 
             trackRepository.countTracks(lent, $scope.moreDataCanBeLoaded);
-            $scope.$broadcast('scroll.refreshComplete');
+            $scope.$broadcast('scroll.refreshComplete');            
             $scope.$apply();
         });
     }    

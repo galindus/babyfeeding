@@ -113,19 +113,32 @@ angular.module('starter.services', [])
                 }                
                 var currdate = new Date(results1.rows.item(0).endTime);
                 currdate.setDate(currdate.getDate() - days);
-                currdate.setHours(0, 0, 0, 0);                
+                currdate.setHours(0, 0, 0, 0);               
                 that.db.transaction(function(tx){                    
-                    tx.executeSql('SELECT * FROM tracks WHERE endTime > ? ORDER BY endTime DESC LIMIT ?', [length, currdate.getTime()],
-                    function(tx, results) {                    
+                    tx.executeSql('SELECT * FROM tracks WHERE endTime > ? ORDER BY endTime DESC', [currdate.getTime()],
+                    function(tx, results) {                         
                         var len = results.rows.length, i;
                         if (len == 0){
                             return undefined;
                         }
+
+                        if (obj.length == len){
+                            // No new results in this iteration recall                            
+                            days+=1;
+                            return repository.getTracksByDay(days, obj, callback);
+                        }
+
+                        // Empty array //
+
+                        while(obj.length > 0) {
+                            obj.pop();
+                        }
+
                         for(i=0; i<len; i++){
                             obj.push(results.rows.item(i));
                         }
                         if(typeof callback === 'function')
-                            callback();
+                            callback();                        
                     }, function (t, e) {
                       // couldn't read database
                       console.log('unknown: ' + e.message);
@@ -145,8 +158,10 @@ angular.module('starter.services', [])
                     if (len >= results.rows.item(0).count){                        
                         more = false;                        
                     }
+
                     if (typeof callback === 'function')
                         callback();
+
                 }, function (t, e) {
                   // couldn't read database
                   console.log('unknown: ' + e.message);

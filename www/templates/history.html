@@ -5,7 +5,7 @@
   <ion-nav-buttons side="right">
     <a href="#/app/track/add" class="button button-icon icon ion-plus-round"></a>
   </ion-nav-buttons>
-  <ion-content class="list" on-infinite="getItems(1)">                
+  <ion-content class="list" >                
         <div class="list card" ng-repeat="day in days">
             <div class="item item-divider">
                 {{ day[0].endTime | date }}
@@ -20,7 +20,8 @@
             </div>
         </div>
         <ion-infinite-scroll
-        ng-if="moreDataCanBeLoaded">
+        on-infinite="getItems(1)"
+        ng-if="moreDataCanBeLoaded" distance="60%">
         </ion-infinite-scroll>
   </ion-content>
 </ion-view>
