@@ -171,9 +171,6 @@ angular.module('starter.controllers', [])
     $scope.tracks = [];   
     $scope.moreDataCanBeLoaded = true;
     $scope.edit = true;
-    $scope.enableEdit = function(){
-        $scope.edit = $scope.edit ? false : true;        
-    }
 
     $scope.confirmDelete = function(id){        
         var confirmPopup = $ionicPopup.confirm({
@@ -348,7 +345,8 @@ angular.module('starter.controllers', [])
         'startTime' : undefined,
         'endTime': undefined,
         'timeInterval': undefined,
-        'bbc': undefined
+        'bbc': undefined,
+        'breast': 'L'
     };
     $scope.trackDate = new Date();
     $scope.bbc = $scope.blc = $scope.brc = "button button-stable";
@@ -392,10 +390,8 @@ angular.module('starter.controllers', [])
     }
 
     $scope.intervalCheck = function(){
-        if(!$scope.intervalTime)
-            return true;
-        if($scope.intervalTime <=0)
-            return true;
+        if(!$scope.intervalTime || !$scope.track.breast || $scope.intervalTime <=0)
+            return true;        
         return false;
     }
 
