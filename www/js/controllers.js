@@ -252,45 +252,50 @@ angular.module('starter.controllers', [])
     $scope.trackSelected.Id = undefined;
     $scope.tracks = [];
 
-    $scope.itemSelected = function(track) {
-        $scope.trackSelected = track;
-    }
 
-    $scope.getItems = function(increase){              
-        $scope.limit += increase;
-        $scope.days = [];                        
-        trackRepository.getTracksByDay($scope.limit, $scope.tracks, function(){             
-            var lent = $scope.tracks.length, lend = undefined, i;            
-            for(i=0;i<lent;i++){
-                if(lend == undefined){
-                    $scope.days[0] = [];
-                    $scope.days[0].push($scope.tracks[i]);
-                    lend=0;
-                    continue;
-                }
-                
-                tdate = new Date($scope.tracks[i].endTime);
-                tdates = tdate.getDate()+"-"+tdate.getMonth()+"-"+tdate.getFullYear();
-                ddate = new Date($scope.days[lend][0].endTime);
-                ddates = ddate.getDate()+"-"+ddate.getMonth()+"-"+ddate.getFullYear();
+    var timer = storage.getItem("timer");
+    var lastitem = 0;
+    var lasttrack = {};
+    $scope.maxitems = 0;
+    $scope.currlen = 0;
+    $scope.days = [];
+    if(timer === null)
+        lastitem = 1;
 
-                if(tdates.localeCompare(ddates) === 0){
-                    $scope.days[lend].push($scope.tracks[i]);
-                    continue;
-                }                
-                lend+=1;
-                $scope.days[lend] = [];
-                $scope.days[lend].push($scope.tracks[i]);
-            } 
+    trackRepository.countTracks(function(len){
+        $scope.maxitems = len;
+        trackRepository.getLastTrack(lasttrack, function(){            
+            $scope.startdate = new Date(lasttrack.endTime);
+            $scope.startdate.setHours(0, 0, 0, 0); 
+            $scope.enddate = new Date();            
+            // Get 2 days.
+            $scope.getItems(0);
+        }, lastitem);
+    });    
 
-            trackRepository.countTracks(lent, $scope.moreDataCanBeLoaded);
-            $scope.$broadcast('scroll.refreshComplete');            
-            $scope.$apply();
+    $scope.getItems = function(increase){         
+        if(increase > 0){
+            $scope.enddate = new Date($scope.startdate.getTime());
+            $scope.startdate.setDate($scope.startdate.getDate() - increase);
+            $scope.startdate.setHours(0,0,0,0);
+
+        }        
+        
+        trackRepository.getTracksByDay($scope.startdate, $scope.enddate, function(results){                        
+            var len = results.rows.length;            
+            if(len == 0)
+                return $scope.getItems(1);
+            $scope.currlen += len;
+            $scope.days[$scope.days.length] = [];            
+            for(i=0; i<len; i++){                
+                $scope.days[$scope.days.length-1].push(results.rows.item(i));
+            }
+            if ($scope.currlen >= $scope.maxitems)
+                $scope.moreDataCanBeLoaded = false;            
+            $scope.$broadcast('scroll.infiniteScrollComplete');
+            $scope.$apply();            
         });
     }    
-
-    // Get 2 days.
-    $scope.getItems(1);
 
     $scope.getTotalFeed = function(arr){
         len = arr.length;
@@ -309,34 +314,36 @@ angular.module('starter.controllers', [])
     moment.lang($scope.settings.lang.code);
     $scope.track = {};
     trackRepository.get($stateParams.id, $scope.track, function(){
+        $scope.date = moment($scope.track.startTime).format('D MMMM YYYY');
+
+        $scope.startTime = function(){
+            return moment($scope.track.startTime).format('h:mm a');
+        }
+
+        $scope.endTime = function(){
+            return moment($scope.track.startTime + $scope.track.timeInterval*1000).format('h:mm a');
+        }
+
+        Object.defineProperty($scope, 'interval', {
+            get: function() {            
+                return parseInt($filter('number')($scope.track.timeInterval/60, '0'));
+            },
+            set: function(val){
+                $scope.track.timeInterval = val*60;
+                trackRepository.update($scope.track);
+            }
+        });
+
+        $scope.$watch("interval");
+
+        $scope.returnHistory = function(){        
+            $location.path("/app/history");        
+        }
+
         $scope.$apply();
     });
-
-    $scope.date = moment($scope.track.startTime).format('D MMMM YYYY');
-
-    $scope.startTime = function(){
-        return moment($scope.track.startTime).format('D MMMM  YYYY, h:mm a');
-    }
-
-    $scope.endTime = function(){
-        return moment($scope.track.startTime + $scope.track.timeInterval*1000).format('D MMMM YYYY, h:mm a');
-    }
-
-    Object.defineProperty($scope, 'interval', {
-        get: function() {            
-            return parseInt($filter('number')($scope.track.timeInterval/60, '0'));
-        },
-        set: function(val){
-            $scope.track.timeInterval = val*60;
-            trackRepository.update($scope.track);
-        }
-    });
-
-    $scope.$watch("interval");
-
-    $scope.returnHistory = function(){        
-        $location.path("/app/history");        
-    }
+    
+    
 
 })
 
@@ -362,7 +369,9 @@ angular.module('starter.controllers', [])
             return $filter("date")($scope.trackDate, 'yyyy-MM-dd');
         },
         set: function(val){      
-            $scope.trackDate = new Date(moment(val, 'YYYY-MM-DD').valueOf());            
+            $scope.trackDate = new Date(moment(val, 'YYYY-MM-DD').valueOf());
+            $scope.startModified($scope.endTime);
+            $scope.endModified($scope.startTime);
         }
     });
 
