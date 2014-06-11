@@ -34,7 +34,7 @@ var translations_es = {
     'End': 'Fin',
     'Save': 'Guardar',    
     'Edit track': 'Editar registro',
-    'It\'s time to feed!.' : 'Es momento de comer!',
+    'timeToFeed' : 'Es momento de comer!',
     'reminder' : 'Recordatorio',
     'Interval (hours)' : 'Intervalo (horas)',
     'Notifications' : 'Notificaciones',

@@ -24,6 +24,13 @@ angular.module('starter.controllers', [])
             'reminder' : 'Reminder',
         }
 
+    $translate('timeToFeed').then(function(tran){
+        $scope.translations.timeToFeed = tran;
+    })
+    $translate('reminder').then(function(tran){        
+        $scope.translations.reminder = tran;
+    })
+
     // Start count function
     $scope.startCount = function(){
         if(!$scope.track.pause){
@@ -67,7 +74,6 @@ angular.module('starter.controllers', [])
         if($scope.settings.notificationsEnabled){
             var notTime = new Date();
             var nextFire = notTime.getTime() + $scope.settings.notificationInterval*3600000;
-            
             if($scope.settings.sleepEnabled){
                 var startSleep = moment($scope.settings.startSleep, "HH:mm");
                 var stopSleep = moment($scope.settings.stopSleep, "HH:mm");
