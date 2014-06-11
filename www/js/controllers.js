@@ -1,7 +1,7 @@
 angular.module('starter.controllers', [])
 
 .controller('AppCtrl', function($scope, $translate) {
-    storage = window.localStorage;
+    storage = window.localStorage;    
     var settings = storage.getItem("settings");
     $scope.settings = (settings !== null) ? JSON.parse(settings) : {}    
 
@@ -56,7 +56,19 @@ angular.module('starter.controllers', [])
             trackRepository.update($scope.track);
         }
 
-        $scope.last = $scope.track;
+        $scope.last = $scope.track;        
+        
+        if($scope.settings.notificationsEnabled){
+            var notTime = new Date();
+            notTime.setTime(notTime.getTime() + $scope.settings.notificationInterval*3600000);
+            window.plugin.notification.local.add({
+                id:      1,
+                title:   'Reminder',
+                message: 'It\'s time to feed!.',
+                date:    notTime
+            });
+        }
+
     }
 
     $scope.selectBreast = function(breast){        
@@ -412,7 +424,6 @@ angular.module('starter.controllers', [])
         });
     }
 })
-
 .controller('SettingsCtrl', function($rootScope, $scope, $translate){
     $scope.languages = [
         {code: 'es', text: 'lang_es'},
@@ -420,8 +431,78 @@ angular.module('starter.controllers', [])
         {code: 'ca', text: 'lang_ca'}
     ];
 
-    $scope.setLanguage = function(){
-        storage.setItem("settings", JSON.stringify($scope.settings));        
-        $translate.use($scope.settings.lang.code)
+    
+    var settings = (storage.getItem("settings") !== null) ? JSON.parse(storage.getItem("settings")) : {}
+    
+    $scope.notificationsEnabled = 
+    $scope.sleepEnabled = typeof settings.sleepEnabled !== "undefined" ? settings.sleepEnabled : false;
+
+    Object.defineProperty($scope, 'language', {
+        get: function(){
+            return $scope.settings.lang;
+        },        
+        set: function(val){ 
+            $scope.settings.lang = val;     
+            storage.setItem("settings", JSON.stringify($scope.settings));
+            $translate.use($scope.settings.lang.code)
+        }
+    });
+
+    Object.defineProperty($scope, 'notificationsEnabled', {
+        get: function(){            
+            return typeof $scope.settings.notificationsEnabled !== "undefined" ? $scope.settings.notificationsEnabled : false;
+        },
+        set: function(val){       
+            $scope.settings.notificationsEnabled = val;
+            storage.setItem("settings", JSON.stringify($scope.settings));
+            
+        }
+    });
+
+    Object.defineProperty($scope, 'sleepEnabled', {
+        get: function(){
+            return typeof $scope.settings.sleepEnabled !== "undefined" ? $scope.settings.sleepEnabled : false;
+        },
+        set: function(val){            
+            $scope.settings.sleepEnabled = val;
+            storage.setItem("settings", JSON.stringify($scope.settings));
+        }
+    });
+
+    Object.defineProperty($scope, 'notificationInterval', {
+        get: function(){
+            return $scope.settings.notificationInterval !== "undefined" ? $scope.settings.notificationInterval : 3;
+        },
+        set: function(val){            
+            $scope.settings.notificationInterval = val;
+            storage.setItem("settings", JSON.stringify($scope.settings));
+        }
+    });
+
+    Object.defineProperty($scope, 'startSleep', {
+        get: function(){
+            return $scope.settings.startSleep !== "undefined" ? $scope.settings.startSleep : 3;
+        },
+        set: function(val){            
+            $scope.settings.startSleep = val;
+            storage.setItem("settings", JSON.stringify($scope.settings));
+        }
+    });
+
+    Object.defineProperty($scope, 'stopSleep', {
+        get: function(){
+            return $scope.settings.stopSleep !== "undefined" ? $scope.settings.stopSleep : 3;
+        },
+        set: function(val){            
+            $scope.settings.stopSleep = val;
+            storage.setItem("settings", JSON.stringify($scope.settings));
+        }
+    });
+
+
+
+
+    $scope.setNotification = function(){
+        storage.setItem("settings", JSON.stringify($scope.settings));
     }
 })

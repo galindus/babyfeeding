@@ -8,8 +8,54 @@
             <div class="input-label">
               {{ 'language' | translate }}
             </div>
-            <select ng-change="setLanguage()" ng-model="settings.lang" ng-options="language.text | translate for language in languages track by language.code"></select>
+            <select ng-model="language" ng-options="lan.text | translate for lan in languages track by lan.code"></select>
           </label>
+          <label class="item item-input item-toggle">
+            <div class="input-label">
+              {{ 'Notifications' | translate }}
+            </div>
+            <label class="toggle">
+             <input ng-model="notificationsEnabled" type="checkbox">
+               <div class="track">
+                 <div class="handle"></div>
+               </div>
+            </label>
+          </label>
+          <div class="item item-divider animate-if" ng-if="notificationsEnabled">
+            Notification settings          
+            <label class="item item-input item-input">
+              <div class="input-label">
+                {{ 'Interval (hours)' | translate }}
+              </div>
+              <input type="number" ng-model="notificationInterval"/>
+            </label>
+          </div>
+          <label class="item item-input item-toggle">
+            <div class="input-label">
+              {{ 'Sleep notifications' | translate }}
+            </div>
+            <label class="toggle">
+             <input ng-model="sleepEnabled" type="checkbox">
+               <div class="track">
+                 <div class="handle"></div>
+               </div>
+            </label>
+          </label>
+          <div class="item item-divider animate-if" ng-if="sleepEnabled">
+            Sleep settings          
+            <label class="item item-input item-input">
+              <div class="input-label">
+                {{ 'Start sleep' | translate }}
+              </div>
+              <input type="time" ng-model="startSleep"/>
+            </label>
+            <label class="item item-input item-input">
+              <div class="input-label">
+                {{ 'Resume sleep' | translate }}
+              </div>
+              <input type="time" ng-model="stopSleep"/>
+            </label>      
+          </div>
         </div>
   </ion-content>
 </ion-view>
