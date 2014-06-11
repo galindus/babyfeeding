@@ -62,11 +62,24 @@ angular.module('starter.controllers', [])
             trackRepository.update($scope.track);
         }
 
-        $scope.last = $scope.track;        
+        $scope.last = $scope.track;                
         
         if($scope.settings.notificationsEnabled){
             var notTime = new Date();
-            notTime.setTime(notTime.getTime() + $scope.settings.notificationInterval*3600000);
+            var nextFire = notTime.getTime() + $scope.settings.notificationInterval*3600000;
+            
+            if($scope.settings.sleepEnabled){
+                var startSleep = moment($scope.settings.startSleep, "HH:mm");
+                var stopSleep = moment($scope.settings.stopSleep, "HH:mm");
+                var currDate = new Date();
+                stopSleep.add("days",1)
+                if(nextFire.getTime() > startSleep.valueOf()){
+                    if(nextFire.getTime() < stopSleep.valueOf()){
+                        nextFire = new Date(stopSleep.valueOf());
+                    }
+                }
+            }            
+            
             window.plugin.notification.local.add({
                 id:      1,
                 title:   $scope.translations.reminder,
