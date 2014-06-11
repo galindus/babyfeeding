@@ -33,5 +33,7 @@ var translations_ca = {
     'Add record': 'Afegeix registre',
     'End': 'Final',
     'Save': 'Desar',
-    'Edit track': 'Edita registre'
+    'Edit track': 'Edita registre',    
+    'It\'s time to feed!.' : 'Es moment de menjar!',
+    'reminder' : 'Recordatori',
 };

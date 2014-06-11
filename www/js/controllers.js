@@ -18,6 +18,12 @@ angular.module('starter.controllers', [])
 
 .controller('TrackCtrl', function($scope, trackRepository){
     moment.lang($scope.settings.lang.code);
+
+    $scope.translations = {
+            'timeToFeed' : 'It\'s time to feed!.',
+            'reminder' : 'Reminder',
+        }
+
     // Start count function
     $scope.startCount = function(){
         if(!$scope.track.pause){
@@ -63,8 +69,8 @@ angular.module('starter.controllers', [])
             notTime.setTime(notTime.getTime() + $scope.settings.notificationInterval*3600000);
             window.plugin.notification.local.add({
                 id:      1,
-                title:   'Reminder',
-                message: 'It\'s time to feed!.',
+                title:   $scope.translations.reminder,
+                message: $scope.translations.timeToFeed,
                 date:    notTime
             });
         }
