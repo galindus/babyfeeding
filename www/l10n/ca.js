@@ -34,7 +34,7 @@ var translations_ca = {
     'End': 'Final',
     'Save': 'Desar',
     'Edit track': 'Edita registre',    
-    'It\'s time to feed!.' : 'Es moment de menjar!',
+    'timeToFeed' : 'Es moment de menjar!',
     'reminder' : 'Recordatori',
     'Interval (hours)' : 'Interval (horas)',
     'Notifications' : 'Notificacions',
