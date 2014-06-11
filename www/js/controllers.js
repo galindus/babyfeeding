@@ -90,7 +90,8 @@ angular.module('starter.controllers', [])
                 id:      1,
                 title:   $scope.translations.reminder,
                 message: $scope.translations.timeToFeed,
-                date:    notTime
+                date:    notTime,
+                autoCancel: true
             });
         }
 
