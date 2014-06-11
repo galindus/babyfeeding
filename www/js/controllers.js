@@ -16,7 +16,7 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('TrackCtrl', function($scope, trackRepository){
+.controller('TrackCtrl', function($scope, $translate, trackRepository){
     moment.lang($scope.settings.lang.code);
 
     $scope.translations = {
@@ -26,10 +26,10 @@ angular.module('starter.controllers', [])
 
     $translate('timeToFeed').then(function(tran){
         $scope.translations.timeToFeed = tran;
-    })
+    });
     $translate('reminder').then(function(tran){        
         $scope.translations.reminder = tran;
-    })
+    });
 
     // Start count function
     $scope.startCount = function(){
