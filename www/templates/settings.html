@@ -27,7 +27,7 @@
               <div class="input-label">
                 {{ 'Interval (hours)' | translate }}
               </div>
-              <input type="number" ng-model="notificationInterval"/>
+              <input type="number" ng-model="notificationInterval" min="0" step="any"/>
             </label>
           </div>
           <label class="item item-input item-toggle">
