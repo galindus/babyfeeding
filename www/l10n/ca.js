@@ -36,4 +36,11 @@ var translations_ca = {
     'Edit track': 'Edita registre',    
     'It\'s time to feed!.' : 'Es moment de menjar!',
     'reminder' : 'Recordatori',
+    'Interval (hours)' : 'Interval (horas)',
+    'Notifications' : 'Notificacions',
+    'Notification settings' : 'Configura notificacions',
+    'Sleep notifications' : 'Pausa notifications',
+    'Sleep settings: set period to disable notifications' : 'Configura interval de pausa per a les notificacions',
+    'Start sleep' : 'Inici pausa',
+    'Stop sleep' : 'Final pausa'
 };

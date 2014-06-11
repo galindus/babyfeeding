@@ -36,4 +36,11 @@ var translations_es = {
     'Edit track': 'Editar registro',
     'It\'s time to feed!.' : 'Es momento de comer!',
     'reminder' : 'Recordatorio',
+    'Interval (hours)' : 'Intervalo (horas)',
+    'Notifications' : 'Notificaciones',
+    'Notification settings' : 'Configurar notificaciones',
+    'Sleep notifications' : 'Pausar notificationes',
+    'Sleep settings: set period to disable notifications' : 'Configura periodo de pausa para las notificaciones',
+    'Start sleep' : 'Inicio pausa',
+    'Stop sleep' : 'Final pausa'
 };

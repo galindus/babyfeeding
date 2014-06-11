@@ -22,7 +22,7 @@
             </label>
           </label>
           <div class="item item-divider animate-if" ng-if="notificationsEnabled">
-            Notification settings          
+            {{ 'Notification settings' | translate }}
             <label class="item item-input item-input">
               <div class="input-label">
                 {{ 'Interval (hours)' | translate }}
@@ -42,7 +42,7 @@
             </label>
           </label>
           <div class="item item-divider animate-if" ng-if="sleepEnabled">
-            Sleep settings          
+            {{ 'Sleep settings: set period to disable notifications' | translate }}
             <label class="item item-input item-input">
               <div class="input-label">
                 {{ 'Start sleep' | translate }}
@@ -51,7 +51,7 @@
             </label>
             <label class="item item-input item-input">
               <div class="input-label">
-                {{ 'Resume sleep' | translate }}
+                {{ 'Stop sleep' | translate }}
               </div>
               <input type="time" ng-model="stopSleep"/>
             </label>      
