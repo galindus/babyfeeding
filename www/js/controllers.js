@@ -73,7 +73,7 @@ angular.module('starter.controllers', [])
         
         if($scope.settings.notificationsEnabled){
             var notTime = new Date();
-            var nextFire = notTime.getTime() + $scope.settings.notificationInterval*360000;
+            var nextFire = notTime.getTime() + $scope.settings.notificationInterval*3600000;
             if($scope.settings.sleepEnabled){
                 var startSleep = moment($scope.settings.startSleep, "HH:mm");
                 var stopSleep = moment($scope.settings.stopSleep, "HH:mm");
@@ -90,7 +90,7 @@ angular.module('starter.controllers', [])
                 id:      1,
                 title:   $scope.translations.reminder,
                 message: $scope.translations.timeToFeed,
-                date:    nextFire,
+                date:    new Date(nextFire),
                 autoCancel: true
             });
         }
