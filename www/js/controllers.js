@@ -219,7 +219,13 @@ angular.module('starter.controllers', [])
         confirmPopup.then(function(res){
             if(res){
                 trackRepository.deleteTrack(id, function(){
-                    $scope.getItems(0   );
+                    for(var day=0; day < $scope.days.length; day++){
+                        for(var i=0; i < $scope.days[day].length; i++){                            
+                            if ($scope.days[day][i]["id"] === id){
+                                $scope.days[day].splice(i, 1);  
+                            } 
+                        }
+                    }
                 });
             } else {
                 return true;
